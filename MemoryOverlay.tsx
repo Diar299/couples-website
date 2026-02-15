@@ -1,5 +1,5 @@
 import React from 'react';
-import { Memory } from './types';
+import { Memory } from './types.ts';
 
 interface MemoryOverlayProps {
   memory: Memory | null;
