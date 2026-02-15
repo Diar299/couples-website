@@ -1,0 +1,7 @@
+{
+  "name": "Love Letter Box",
+  "description": "A shared digital sanctuary for couples to store photos, videos, and heartfelt letters. Features an interactive letter-opening experience to reveal precious memories.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
