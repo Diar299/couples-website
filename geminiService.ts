@@ -1,34 +1,15 @@
-import { GoogleGenAI } from "@google/genai";
+export async function askGemini(prompt: string) {
+  const r = await fetch("/api/gemini", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt }),
+  });
 
-export const enhanceLetter = async (draft: string): Promise<string> => {
-  if (!draft) return "";
-  
-  try {
-    const ai = new GoogleGenAI({ apiKey: (window as any).process?.env?.API_KEY || "" });
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: `Enhance the following romantic letter to be more poetic and heartfelt while keeping the original meaning. Return ONLY the enhanced text: \n\n${draft}`,
-      config: {
-        temperature: 0.8,
-      }
-    });
-
-    return response.text?.trim() || draft;
-  } catch (error) {
-    console.error("Gemini Enhancement Error:", error);
-    return draft;
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err?.error || "Gemini request failed");
   }
-};
 
-export const generateCaption = async (title: string): Promise<string> => {
-  try {
-    const ai = new GoogleGenAI({ apiKey: (window as any).process?.env?.API_KEY || "" });
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: `Write a short, romantic 1-sentence caption for a memory titled "${title}".`,
-    });
-    return response.text?.trim() || "";
-  } catch (error) {
-    return "";
-  }
-};
+  const data = await r.json();
+  return data.text; // string
+}
