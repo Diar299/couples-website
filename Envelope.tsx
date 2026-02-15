@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Memory } from './types';
+import { Memory } from './types.ts';
 
 interface EnvelopeProps {
   memory: Memory;
