@@ -1,26 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
 
-// We use a getter or a safe check to ensure we don't crash if process.env is briefly unavailable
-const getApiKey = () => {
-  try {
-    return process.env.API_KEY || '';
-  } catch (e) {
-    return '';
-  }
+// Function to safely initialize AI client
+const getAIClient = () => {
+  const apiKey = process.env.API_KEY || "";
+  return new GoogleGenAI({ apiKey });
 };
-
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export const enhanceLetter = async (draft: string): Promise<string> => {
   if (!draft) return "";
-  
-  const key = getApiKey();
-  if (!key) {
-    console.warn("API_KEY is missing. Letter enhancement will return the original draft.");
+  if (!process.env.API_KEY) {
+    console.warn("API Key missing, returning original draft.");
     return draft;
   }
-
+  
   try {
+    const ai = getAIClient();
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Enhance the following romantic letter to be more poetic and heartfelt while keeping the original meaning. Return ONLY the enhanced text: \n\n${draft}`,
@@ -31,16 +25,15 @@ export const enhanceLetter = async (draft: string): Promise<string> => {
 
     return response.text?.trim() || draft;
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Gemini Enhancement Error:", error);
     return draft;
   }
 };
 
 export const generateCaption = async (title: string): Promise<string> => {
-  const key = getApiKey();
-  if (!key) return "";
-
+  if (!process.env.API_KEY) return "";
   try {
+    const ai = getAIClient();
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Write a short, romantic 1-sentence caption for a memory titled "${title}".`,
