@@ -9,6 +9,7 @@ const App: React.FC = () => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     try {
@@ -22,13 +23,14 @@ const App: React.FC = () => {
       console.error("Failed to load memories", e);
       setMemories(INITIAL_MEMORIES);
     }
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (memories.length > 0) {
+    if (isLoaded && memories.length > 0) {
       localStorage.setItem('love_memories', JSON.stringify(memories));
     }
-  }, [memories]);
+  }, [memories, isLoaded]);
 
   const handleOpenEnvelope = (id: string) => {
     const memory = memories.find(m => m.id === id);
@@ -55,6 +57,8 @@ const App: React.FC = () => {
       if (selectedMemory?.id === id) setSelectedMemory(null);
     }
   };
+
+  if (!isLoaded) return <div className="min-h-screen bg-[#fdfaf6] flex items-center justify-center font-serif italic text-gray-400">Loading your sanctuary...</div>;
 
   return (
     <div className="min-h-screen pb-20 selection:bg-[#991b1b]/10 selection:text-[#991b1b] bg-[#fdfaf6]">
