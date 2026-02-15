@@ -1,15 +1,36 @@
-export async function askGemini(prompt: string) {
-  const r = await fetch("/api/gemini", {
+// geminiService.ts
+
+export async function askGemini(prompt: string): Promise<string> {
+  const res = await fetch("/api/gemini", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
   });
 
-  if (!r.ok) {
-    const err = await r.json().catch(() => ({}));
-    throw new Error(err?.error || "Gemini request failed");
+  if (!res.ok) {
+    let msg = "Gemini request failed";
+    try {
+      const err = await res.json();
+      msg = err?.error || msg;
+    } catch {}
+    throw new Error(msg);
   }
 
-  const data = await r.json();
-  return data.text; // string
+  const data = await res.json();
+  return data.text ?? "";
+}
+
+// ✅ Keep this name because AddMemoryModal.tsx imports it
+export async function enhanceLetter(letter: string): Promise<string> {
+  const prompt = `
+You are helping improve a romantic love letter.
+Rewrite the letter to be warmer, clearer, and more natural.
+Keep the meaning. Do not add explicit content.
+Return only the improved letter.
+
+LETTER:
+${letter}
+  `.trim();
+
+  return askGemini(prompt);
 }
