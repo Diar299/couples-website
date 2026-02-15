@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { MemoryType } from './types';
-import { enhanceLetter } from './geminiService';
+import { MemoryType } from './types.ts';
+import { enhanceLetter } from './geminiService.ts';
 
 interface AddMemoryModalProps {
   isOpen: boolean;
