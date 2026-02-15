@@ -4,7 +4,7 @@ export const enhanceLetter = async (draft: string): Promise<string> => {
   if (!draft) return "";
   
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+    const ai = new GoogleGenAI({ apiKey: (window as any).process?.env?.API_KEY || "" });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Enhance the following romantic letter to be more poetic and heartfelt while keeping the original meaning. Return ONLY the enhanced text: \n\n${draft}`,
@@ -22,7 +22,7 @@ export const enhanceLetter = async (draft: string): Promise<string> => {
 
 export const generateCaption = async (title: string): Promise<string> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+    const ai = new GoogleGenAI({ apiKey: (window as any).process?.env?.API_KEY || "" });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Write a short, romantic 1-sentence caption for a memory titled "${title}".`,
