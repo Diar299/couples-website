@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Memory, MemoryType } from './types';
-import { INITIAL_MEMORIES } from './constants';
-import Envelope from './Envelope';
-import MemoryOverlay from './MemoryOverlay';
-import AddMemoryModal from './AddMemoryModal';
+import { Memory, MemoryType } from './types.ts';
+import { INITIAL_MEMORIES } from './constants.tsx';
+import Envelope from './Envelope.tsx';
+import MemoryOverlay from './MemoryOverlay.tsx';
+import AddMemoryModal from './AddMemoryModal.tsx';
 
 const App: React.FC = () => {
   const [memories, setMemories] = useState<Memory[]>([]);
