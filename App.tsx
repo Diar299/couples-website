@@ -11,10 +11,15 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('love_memories');
-    if (saved) {
-      setMemories(JSON.parse(saved));
-    } else {
+    try {
+      const saved = localStorage.getItem('love_memories');
+      if (saved) {
+        setMemories(JSON.parse(saved));
+      } else {
+        setMemories(INITIAL_MEMORIES);
+      }
+    } catch (e) {
+      console.error("Failed to load memories", e);
       setMemories(INITIAL_MEMORIES);
     }
   }, []);
@@ -44,13 +49,15 @@ const App: React.FC = () => {
 
   const handleDeleteMemory = (id: string) => {
     if (window.confirm('Are you sure you want to remove this memory from the box?')) {
-      setMemories(memories.filter(m => m.id !== id));
+      const updated = memories.filter(m => m.id !== id);
+      setMemories(updated);
+      localStorage.setItem('love_memories', JSON.stringify(updated));
       if (selectedMemory?.id === id) setSelectedMemory(null);
     }
   };
 
   return (
-    <div className="min-h-screen pb-20 selection:bg-[#991b1b]/10 selection:text-[#991b1b]">
+    <div className="min-h-screen pb-20 selection:bg-[#991b1b]/10 selection:text-[#991b1b] bg-[#fdfaf6]">
       <header className="sticky top-0 z-40 bg-[#fdfaf6]/90 backdrop-blur-md border-b border-[#eee4d8]">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
